@@ -1,21 +1,32 @@
-# Done
-
 import numpy as np
 
-def how_much_time_to_reach(distance, speed_of_ship_as_fraction_of_light):
-    speed_of_light = 299792458.
+def how_much_time_to_reach(distance, speed_fraction_of_light):
+    speed_of_light = 299792458
     distance = float(distance)
-    speed_of_ship_as_fraction_of_light = float(speed_of_ship_as_fraction_of_light)
+    speed_fraction_of_light = float(speed_fraction_of_light)
 
-    time_measured_in_the_cockpit = (distance / (speed_of_ship_as_fraction_of_light * speed_of_light))
+    # 计算飞船的实际速度
+    ship_speed = speed_fraction_of_light * speed_of_light
 
-    time_detected_from_earth = (distance / np.sqrt(speed_of_light**2 - speed_of_ship_as_fraction_of_light** 2))
+    # 计算在驾驶舱内测量的时间
+    time_in_cockpit = distance / ship_speed
 
-    return time_measured_in_the_cockpit, time_detected_from_earth
+    # 根据狭义相对论计算在地球上检测到的时间
+    gamma = 1 / np.sqrt(1 - speed_fraction_of_light**2)
+    time_on_earth = gamma * time_in_cockpit
 
-cockpit, earth = how_much_time_to_reach(input("Enter the distance in meters: "), input("Enter the speed of the ship as a fraction of the speed of light: "))
+    return time_in_cockpit, time_on_earth
 
-print("This the time measured in the ship: %f s, and this is the time measured on earth: %f s" % (cockpit, earth))
+if __name__ == "__main__":
+    seconds_per_year = 365 * 24 * 3600  # 一年的秒数
+    speed_of_light = 299792458  # 光速，单位：m/s
+    distance = 10 * seconds_per_year * speed_of_light  # 10 光年的距离
+    speed_fraction = 0.99  # 飞船速度是光速的 0.99 倍
 
+    time_in_cockpit, time_on_earth = how_much_time_to_reach(distance, speed_fraction)
+    # 将时间转换为年
+    time_in_cockpit_in_years = time_in_cockpit / seconds_per_year
+    time_on_earth_in_years = time_on_earth / seconds_per_year
 
-
+    print(f"在飞船驾驶舱内测量的时间: {time_in_cockpit_in_years} 年，在地球上检测到的时间: {time_on_earth_in_years} 年")
+    
